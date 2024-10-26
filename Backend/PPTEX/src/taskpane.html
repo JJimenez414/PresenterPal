@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Slide Manager</title>
+  <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+  <script src="taskpane.js"></script>
+  <link rel="stylesheet" type="text/css" href="styles.css" />
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 20px;
+      background-color: #f9f9f9;
+    }
+    h2, h3 {
+      color: #2E89FC;
+    }
+    label {
+      display: inline-block;
+      width: 150px;
+    }
+    input, button, select {
+      margin-bottom: 10px;
+      padding: 5px;
+      width: 200px;
+    }
+    button {
+      background-color: #0078d7;
+      color: #ffffff;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #005a9e;
+    }
+  </style>
+</head>
+<body>
+  <h2>Slide Manager</h2>
+  
+  <button id="add-slide-button">Add Slide with Text</button>
+  
+  <h3>Move Text Box</h3>
+  <label for="shape-id">Shape ID:</label>
+  <input type="text" id="shape-id" placeholder="Enter Shape ID"><br><br>
+  
+  <label for="new-left">New Left (points):</label>
+  <input type="number" id="new-left" value="100"><br><br>
+  
+  <label for="new-top">New Top (points):</label>
+  <input type="number" id="new-top" value="100"><br><br>
+  
+  <button id="move-text-button">Move Text Box</button>
+  
+  <h3>Modify Font Properties</h3>
+  <label for="font-shape-id">Shape ID:</label>
+  <input type="text" id="font-shape-id" placeholder="Enter Shape ID"><br><br>
+  
+  <label for="font-size">Font Size (points):</label>
+  <input type="number" id="font-size" value="24"><br><br>
+  
+  <label for="font-color">Font Color:</label>
+  <input type="color" id="font-color" value="#000000"><br><br>
+  
+  <label for="font-bold">Bold:</label>
+  <input type="checkbox" id="font-bold"><br><br>
+  
+  <button id="modify-font-button">Modify Font</button>
+  
+  <h3>Modify Text Content</h3>
+  <label for="text-shape-id">Shape ID:</label>
+  <input type="text" id="text-shape-id" placeholder="Enter Shape ID"><br><br>
+  
+  <label for="new-text">New Text:</label>
+  <input type="text" id="new-text" placeholder="Enter new text"><br><br>
+  
+  <button id="modify-text-button">Modify Text</button>
+  
+  <h3>Utility</h3>
+  <button id="list-shapes-button">List Shapes</button>
+</body>
+</html>
