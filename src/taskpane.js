@@ -1,5 +1,5 @@
 // OpenAI API Key
-const OPENAI_API_KEY = "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";
+const OPENAI_API_KEY = "YOUR_API";
 
 // Debug logging helper
 function logDebug(message, data = null) {
