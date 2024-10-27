@@ -47,3 +47,11 @@ button:hover {
     border: 1px solid #d83b01;
     border-radius: 4px;
 }
+
+.processing {
+    display: block;
+    color: #666;
+    background-color: #f4f4f4;
+    border: 1px solid #666;
+    border-radius: 4px;
+}

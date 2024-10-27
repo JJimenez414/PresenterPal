@@ -18,9 +18,12 @@ module.exports = {
     },
     server: {
       type: 'https',
-      options: {}
+      options: {
+        cert: process.env.SSL_CRT_FILE,
+        key: process.env.SSL_KEY_FILE,
+      }
     },
-    port: 3300,
+    port: 3000,
     host: 'localhost',
     allowedHosts: 'all',
     hot: true,
@@ -29,6 +32,7 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, "src/taskpane.html"),
+      filename: "taskpane.html"
     }),
     new CopyWebpackPlugin({
       patterns: [
