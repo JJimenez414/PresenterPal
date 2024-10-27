@@ -13,7 +13,10 @@ Office.onReady(() => {
     });
 });
 
+
 async function processWithOpenAI(command, currentState) {
+    // (No changes in this function)
+    // ... existing code ...
     try {
         logDebug('Sending request to OpenAI', { command, currentState });
         
@@ -28,25 +31,29 @@ async function processWithOpenAI(command, currentState) {
                 messages: [
                     {
                         role: "system",
-                        content: `You are a PowerPoint formatting assistant. Convert natural language commands into specific formatting instructions. 
-                        Respond only with a JSON object containing the following possible properties:
-                        {
-                            "color": "hex color code",
-                            "bold": boolean,
-                            "italic": boolean,
-                            "underline": boolean,
-                            "fontSize": number (in points),
-                            "font": "font name",
-                            "error": "error message if command is invalid"
-                        }
-                        Example 1: "make it red and bold" would return {"color": "#FF0000", "bold": true}
-                        Example 2: "remove bold and make it blue" would return {"color": "#0000FF", "bold": false}
-                        Always return valid hex codes for colors.`
+                        content: `You are a PowerPoint formatting assistant. Convert natural language commands into specific formatting instructions.
+Respond only with a JSON object containing the following possible properties:
+{
+    "color": "color name", // Accept color names like 'red', 'blue', etc.
+    "bold": boolean,
+    "italic": boolean,
+    "underline": boolean,
+    "fontSize": number (in points),
+    "font": "font name",
+    "applyToAll": boolean, // Set to true if the command refers to multiple shapes
+    "targetShapes": "description of target shapes", // e.g., "text boxes", "titles", "all shapes"
+    "error": "error message if command is invalid"
+}
+Examples:
+1. "Make all text boxes red and bold" would return {"color": "red", "bold": true, "applyToAll": true, "targetShapes": "text boxes"}
+2. "Make all titles italic and blue" would return {"color": "blue", "italic": true, "applyToAll": true, "targetShapes": "titles"}
+3. "Change the color to green for all text, or all text boxes" would return {"color": "green", "applyToAll": true, "targetShapes": "all shapes"}
+Always return color names instead of hex codes.`
                     },
                     {
                         role: "user",
                         content: `Current state: ${JSON.stringify(currentState)}
-                        Command: ${command}`
+Command: ${command}`
                     }
                 ],
                 temperature: 0.3
@@ -75,29 +82,35 @@ async function processWithOpenAI(command, currentState) {
 }
 
 async function getCurrentState(shape) {
+    // (No changes in this function)
+    // ... existing code ...
     try {
         const state = {
-            color: shape.textFrame.textRange.font.color || '#000000',
+            color: shape.textFrame.textRange.font.color || 'black',
             bold: shape.textFrame.textRange.font.bold || false,
             italic: shape.textFrame.textRange.font.italic || false,
             underline: shape.textFrame.textRange.font.underline || false,
-            fontSize: shape.textFrame.textRange.font.size || 12
+            fontSize: shape.textFrame.textRange.font.size || 12,
+            font: shape.textFrame.textRange.font.name || 'Calibri'
         };
         logDebug('Current state retrieved', state);
         return state;
     } catch (error) {
         logDebug('Error getting current state:', error);
         return {
-            color: '#000000',
+            color: 'black',
             bold: false,
             italic: false,
             underline: false,
-            fontSize: 12
+            fontSize: 12,
+            font: 'Calibri'
         };
     }
 }
 
 async function applyFormatting(shape, formatting) {
+    // (No changes in this function)
+    // ... existing code ...
     try {
         logDebug('Applying formatting', formatting);
         
@@ -109,7 +122,7 @@ async function applyFormatting(shape, formatting) {
         const font = shape.textFrame.textRange.font;
 
         if (formatting.color) {
-            font.color = formatting.color;
+            font.color = formatting.color; // Accept color names directly
         }
         if (formatting.bold !== undefined) {
             font.bold = formatting.bold;
@@ -134,6 +147,49 @@ async function applyFormatting(shape, formatting) {
     }
 }
 
+async function applyFormattingToAll(slide, formatting) {
+    const shapes = slide.shapes;
+    shapes.load("items");
+    await slide.context.sync();
+
+    const shapeItems = shapes.items;
+    let matchFound = false;
+    const targetShapes = formatting.targetShapes?.toLowerCase() || "";
+
+    for (let i = 0; i < shapeItems.length; i++) {
+        const shape = shapeItems[i];
+        shape.load("shapeType, textFrame, textFrame/hasText, textFrame/textRange/font, placeholder");
+    }
+    await slide.context.sync();
+
+    for (let i = 0; i < shapeItems.length; i++) {
+        const shape = shapeItems[i];
+        let isMatch = false;
+
+        // Determine if this shape matches the target criteria, 
+        if (targetShapes.includes("all shapes") || targetShapes === "") {
+            isMatch = true;
+        } else if (targetShapes.includes("text boxes")) {
+            if (shape.shapeType === "TextBox") {
+                isMatch = true;
+            }
+        } else if (targetShapes.includes("titles")) {
+            if (shape.placeholder && shape.placeholder.type === "Title") {
+                isMatch = true;
+            }
+        }
+
+        if (isMatch && shape.textFrame && shape.textFrame.hasText) {
+            await applyFormatting(shape, formatting);
+            matchFound = true;
+        }
+    }
+
+    if (!matchFound) {
+        showStatus("No matching shapes found to apply formatting.", "error");
+    }
+}
+
 async function executeCommand() {
     logDebug('executeCommand started');
     const commandText = document.getElementById("commandInput").value;
@@ -147,27 +203,108 @@ async function executeCommand() {
     
     try {
         await PowerPoint.run(async (context) => {
-            let slide;
-            try {
-                slide = context.presentation.getSelectedSlides();
+            // Load all slides in the presentation
+            const slides = context.presentation.slides;
+            slides.load("items");
+            await context.sync();
+
+            // For AI context, get current state from the first shape of the first slide
+            let currentState = {};
+            let foundState = false;
+
+            for (let slideIndex = 0; slideIndex < slides.items.length; slideIndex++) {
+                const slide = slides.items[slideIndex];
+                const shapes = slide.shapes;
+                shapes.load("items");
                 await context.sync();
-                slide = slide.items.length > 0 ? slide.items[0] : context.presentation.slides.getItemAt(0);
-            } catch {
-                slide = context.presentation.slides.getItemAt(0);
-            }
-            
-            let shape;
-            try {
-                const selection = slide.shapes.getSelection();
+
+                for (let i = 0; i < shapes.items.length; i++) {
+                    const shape = shapes.items[i];
+                    shape.load("textFrame, textFrame/hasText, textFrame/textRange/font");
+                }
                 await context.sync();
-                shape = selection.items.length > 0 ? selection.items[0] : slide.shapes.getItemAt(0);
-            } catch {
-                shape = slide.shapes.getItemAt(0);
+
+                for (let i = 0; i < shapes.items.length; i++) {
+                    const shape = shapes.items[i];
+                    if (shape.textFrame && shape.textFrame.hasText) {
+                        currentState = await getCurrentState(shape);
+                        foundState = true;
+                        break;
+                    }
+                }
+
+                if (foundState) {
+                    break;
+                }
             }
 
-            const currentState = await getCurrentState(shape);
+            if (!foundState) {
+                showStatus("No shapes with text found to get current state.", "error");
+                return;
+            }
+
             const formatting = await processWithOpenAI(commandText, currentState);
-            await applyFormatting(shape, formatting);
+
+            if (formatting.error) {
+                showStatus(formatting.error, "error");
+                return;
+            }
+
+            // Determine the target slide
+            let targetSlideIndex = null; // 0-based index
+            if (formatting.targetSlide !== undefined && formatting.targetSlide !== null) {
+                targetSlideIndex = formatting.targetSlide - 1; // Convert to 0-based index
+                if (targetSlideIndex < 0 || targetSlideIndex >= slides.items.length) {
+                    showStatus(`Slide ${formatting.targetSlide} does not exist.`, "error");
+                    return;
+                }
+            } else {
+                // If no targetSlide specified, use the current slide
+                const selectedSlides = context.presentation.getSelectedSlides();
+                selectedSlides.load("items");
+                await context.sync();
+
+                if (selectedSlides.items.length > 0) {
+                    targetSlideIndex = slides.items.findIndex(s => s.id === selectedSlides.items[0].id);
+                } else {
+                    // Fallback to the first slide
+                    targetSlideIndex = 0;
+                }
+            }
+
+            // Get the target slide
+            const targetSlide = slides.items[targetSlideIndex];
+
+            // Apply formatting to the target slide
+            const shapes = targetSlide.shapes;
+            shapes.load("items");
+            await context.sync();
+
+            for (let i = 0; i < shapes.items.length; i++) {
+                const shape = shapes.items[i];
+                shape.load("textFrame, textFrame/hasText, textFrame/textRange/font, shapeType, placeholder");
+            }
+            await context.sync();
+
+            if (formatting.applyToAll) {
+                await applyFormattingToAll(targetSlide, formatting);
+            } else {
+                // Apply to the first matching shape on the slide
+                let shapeApplied = false;
+                for (let i = 0; i < shapes.items.length; i++) {
+                    const shape = shapes.items[i];
+                    if (shape.textFrame && shape.textFrame.hasText) {
+                        await applyFormatting(shape, formatting);
+                        shapeApplied = true;
+                        break;
+                    }
+                }
+
+                if (!shapeApplied) {
+                    logDebug(`No matching shape found on slide ${targetSlideIndex + 1}`);
+                }
+            }
+
             await context.sync();
 
             showStatus("Changes applied successfully", "success");
