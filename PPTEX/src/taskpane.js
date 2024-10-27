@@ -1,4 +1,4 @@
-
+// Replace your API key securely (see note below)
 function logDebug(message, data = null) {
     console.log(`Debug: ${message}`, data || '');
 }
