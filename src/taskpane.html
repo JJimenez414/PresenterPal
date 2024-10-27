@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <title>PresenterPal</title>
+
+    <!-- Office JavaScript API -->
+    <script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+    
+    <!-- Initialize global chat namespace -->
+    <script>
+        if (!window.ChatApp) {
+            window.ChatApp = {};
+            console.log("Created ChatApp namespace");
+        }
+    </script>
+
+    <!-- Styles -->
+    <link href="taskpane.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <div class="header">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="#0078d4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M2 17L12 22L22 17" stroke="#0078d4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M2 12L12 17L22 12" stroke="#0078d4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="header-title">PresenterPal AI</span>
+    </div>
+
+    <div id="chat-container" class="chat-container">
+        <div class="message assistant">
+            <div class="avatar assistant-avatar">AI</div>
+            <div class="message-content">
+                Hello! I can help you format your PowerPoint slides. Try commands like "make the text blue" or "increase font size".
+            </div>
+        </div>
+    </div>
+
+    <div id="image-message-template" style="display: none;">
+        <div class="message assistant">
+            <div class="avatar assistant-avatar">AI</div>
+            <div class="message-content">
+                <p>I've generated your image! Feel free to drop it down anywhere.</p>
+                <div class="image-container">
+                    <img class="generated-image" alt="Generated Image" style="max-width: 100%; height: auto;">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="status" class="status-message"></div>
+
+    <div class="input-container">
+        <div class="input-wrapper">
+            <input type="text" id="commandInput" placeholder="Type your formatting command..." />
+            <button id="executeCommand">
+                <svg class="send-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M22 2L11 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Webpack will automatically inject the bundled scripts here -->
+</body>
+</html>
