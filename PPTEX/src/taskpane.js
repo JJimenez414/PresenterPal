@@ -1,3 +1,4 @@
+
 function logDebug(message, data = null) {
     console.log(`Debug: ${message}`, data || '');
 }
@@ -35,6 +36,7 @@ async function processWithOpenAI(command, currentState) {
                             "italic": boolean,
                             "underline": boolean,
                             "fontSize": number (in points),
+                            "font": "font name",
                             "error": "error message if command is invalid"
                         }
                         Example 1: "make it red and bold" would return {"color": "#FF0000", "bold": true}
@@ -120,6 +122,9 @@ async function applyFormatting(shape, formatting) {
         }
         if (formatting.fontSize) {
             font.size = formatting.fontSize;
+        }
+        if (formatting.font) {
+            font.name = formatting.font;
         }
         
         logDebug('Formatting applied successfully');
