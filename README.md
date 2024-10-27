@@ -20,26 +20,34 @@ Clone the Repository
 ### Installing
 
 bash
+```
 Copy code
 git clone https://github.com/yourusername/your-repo-name.git
 cd your-repo-name
-Install Dependencies
+```
 
 bash
+```
 Copy code
 npm install
+```
+
 Set Up Environment Variables
 
 Create a .env file in the project root:
 
 bash
+```
 Copy code
 touch .env
+```
 Add your OpenAI API key to the .env file:
 
 env
+```
 Copy code
 OPENAI_API_KEY=your-openai-api-key-here
+```
 Note: Replace your-openai-api-key-here with your actual OpenAI API key. Do not share this key publicly or commit it to version control.
 
 Trust the Self-Signed Certificate (For Local Development)
@@ -47,16 +55,20 @@ Trust the Self-Signed Certificate (For Local Development)
 Install and trust the certificates:
 
 bash
+```
 Copy code
 npx office-addin-dev-certs install
+```
 Follow the prompts to install and trust the certificates required for local development.
 
 Build and Start the Project
 
+```
 bash
 Copy code
 npm run build
 npm start
+```
 This will start the local server and open PowerPoint with the add-in sideloaded.
 Sideload the Add-in Manually (If Necessary)
 
@@ -76,43 +88,31 @@ Keep the .env file private and consider adding it to your .gitignore file.
 
 ### Executing program
 
-* How to run the program
-* Step-by-step bullets
 ```
-code blocks for commands
-```
-
-## Help
-
-Any advise for common problems or issues.
-```
-command to run if program contains helper info
+npm install
+npm run dev-server
 ```
 
 ## Authors
 
 Contributors names and contact info
 
-ex. Dominique Pizzie  
-ex. [@DomPizzie](https://twitter.com/dompizzie)
+Justin Pardo
+Carlos Lopez  
+Jose Jimenez
+Anthony Montelongo - Navejar
 
 ## Version History
 
-* 0.2
-    * Various bug fixes and optimizations
-    * See [commit change]() or See [release history]()
 * 0.1
     * Initial Release
 
 ## License
 
-This project is licensed under the [NAME HERE] License - see the LICENSE.md file for details
+This project is licensed under the Source-Available Licenses - see the LICENSE.md file for details
 
 ## Acknowledgments
 
 Inspiration, code snippets, etc.
-* [awesome-readme](https://github.com/matiassingers/awesome-readme)
-* [PurpleBooth](https://gist.github.com/PurpleBooth/109311bb0361f32d87a2)
-* [dbader](https://github.com/dbader/readme-template)
-* [zenorocha](https://gist.github.com/zenorocha/4526327)
-* [fvcproductions](https://gist.github.com/fvcproductions/1bfc2d4aecb01a834b46)
+* [API reference documentation]((https://learn.microsoft.com/en-us/office/dev/add-ins/reference/javascript-api-for-office))
+* [OpenAI API](https://platform.openai.com/docs/api-reference/introduction)
