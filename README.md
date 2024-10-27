@@ -97,9 +97,9 @@ npm run dev-server
 
 Contributors names and contact info
 
-Justin Pardo
-Carlos Lopez  
-Jose Jimenez
+Justin Pardo,
+Carlos Lopez, 
+Jose Jimenez,
 Anthony Montelongo - Navejar
 
 ## Version History
