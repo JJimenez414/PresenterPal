@@ -114,5 +114,5 @@ This project is licensed under the Source-Available Licenses - see the LICENSE.m
 ## Acknowledgments
 
 Inspiration, code snippets, etc.
-* [API reference documentation]((https://learn.microsoft.com/en-us/office/dev/add-ins/reference/javascript-api-for-office))
+* [API reference documentation](https://learn.microsoft.com/en-us/office/dev/add-ins/reference/javascript-api-for-office)
 * [OpenAI API](https://platform.openai.com/docs/api-reference/introduction)
