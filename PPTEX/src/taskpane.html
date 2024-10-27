@@ -1,37 +1,48 @@
+<!-- taskpane.html -->
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <title>PowerPoint Add-in</title>
-    
+
     <!-- Office JavaScript API -->
     <script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
-    
-    <!-- Fluent UI -->
-    <link rel="stylesheet" href="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-core/11.0.0/css/fabric.min.css"/>
-    
-    <!-- Template styles -->
+
+    <!-- Fluent UI CSS (For Icons and Styling) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/office-ui-fabric-core/11.0.0/css/fabric.min.css" integrity="sha512-fALeM+xtLgmXkZrvE0pZ4vlp3B81uIyI9jSBFqO21Pz0VUGTKHiCMwzUzscD0V13xr3R4wFlxSZTEpwxX0WZow==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- Custom Styles -->
     <link href="taskpane.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body class="ms-font-m ms-Fabric">
-    <div id="content-main">
+<body class="ms-Fabric">
+    <div id="content-main" class="ms-Grid ms-bgColor-neutralLighter ms-fontColor-neutralPrimary">
         <div class="padding">
-            <div class="ms-Grid ms-bgColor-neutralLighter ms-fontColor-neutralPrimary">
-                <h2 class="ms-font-xl">PowerPoint Assistant</h2>
-                <div class="ms-TextField">
-                    <input type="text" id="commandInput" class="ms-TextField-field" 
-                           placeholder="Type your command (e.g., 'make it red' or 'generate image of mountains')" />
+            <!-- Command Input Section -->
+            <h2 class="ms-font-xl">Command Input</h2>
+            <div class="ms-TextField">
+                <div class="command-input-container">
+                    <input type="text" id="commandInput" class="ms-TextField-field" placeholder="Type your command or use the microphone" />
+                    <!-- Microphone Button -->
+                    <button id="micButton" class="ms-Button ms-Button--icon">
+                        <i class="ms-Icon ms-Icon--Microphone"></i>
+                    </button>
                 </div>
-                <button id="executeCommand" class="ms-Button ms-Button--primary">
-                    <span class="ms-Button-label">Execute</span>
-                </button>
             </div>
-            
+            <button id="executeCommand" class="ms-Button ms-Button--primary">
+                <span class="ms-Button-label">Execute</span>
+            </button>
+
             <!-- Status Message -->
             <div id="status" class="status-message ms-font-s" aria-live="polite" style="margin-top: 20px;"></div>
+
+            <!-- Generated Content Will Appear Here -->
+            <div id="generated-content" style="margin-top: 20px;"></div>
         </div>
     </div>
+
+    <!-- Include your JavaScript file -->
+    <script src="taskpane.js"></script>
 </body>
 </html>

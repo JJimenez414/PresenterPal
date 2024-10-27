@@ -55,3 +55,44 @@ button:hover {
     border: 1px solid #666;
     border-radius: 4px;
 }
+
+/* Command Input and Microphone Button */
+.command-input-container {
+    display: flex;
+    align-items: center;
+}
+
+#commandInput {
+    flex: 1;
+}
+
+#micButton {
+    margin-left: 5px;
+    vertical-align: middle;
+}
+
+#micButton .ms-Icon {
+    font-size: 20px;
+}
+
+/* Listening State */
+#micButton.listening {
+    background-color: #e0e0e0; /* Change color when listening */
+}
+
+/* Status Message Styles */
+.status-message {
+    margin-top: 10px;
+}
+
+.status-message.success {
+    color: green;
+}
+
+.status-message.error {
+    color: red;
+}
+
+.status-message.processing {
+    color: orange;
+}
